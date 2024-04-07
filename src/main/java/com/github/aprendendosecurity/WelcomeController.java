@@ -11,4 +11,16 @@ public class WelcomeController {
 		return "Welcome to this welcome";
 	}
 
+	@GetMapping("/users")
+	@PreAuthorize("hasAnyRole('MANAGER', 'USER')")
+	public String users() {
+		return "Authorized user";
+	}
+
+	@GetMapping("/managers")
+	@PreAuthorize("hasRole('MANAGER')")
+	public String managers() {
+		return "Authorized manager";
+	}
+
 }
