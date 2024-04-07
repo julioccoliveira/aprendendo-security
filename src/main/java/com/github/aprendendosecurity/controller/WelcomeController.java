@@ -10,10 +10,6 @@ public class WelcomeController {
 		return "Welcome to this welcome";
 	}
 
-	@GetMapping("/users")
-	public String users() {
-		return "Authorized user";
-	}
 
 	@GetMapping("/managers")
 	public String managers() {
