@@ -1,7 +1,5 @@
 package com.github.aprendendosecurity.security;
 
-import jakarta.servlet.annotation.WebServlet;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -45,19 +43,12 @@ public class WebSecurityConfig {
 		http.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers(SWAGGER_WHITELIST).permitAll()
 				.requestMatchers("/h2-console/**").permitAll()
-				.requestMatchers(HttpMethod.POST, "/login").permitAll()
-				.requestMatchers(HttpMethod.POST,"/users").hasAnyRole("USER", "MANAGER")
+				.requestMatchers("/login").permitAll()
+				.requestMatchers(HttpMethod.POST, "/users").permitAll()
 				.requestMatchers(HttpMethod.GET, "/users").hasAnyRole("USER", "MANAGER")
 				.requestMatchers("/managers").hasAnyRole("MANAGER")
-				.anyRequest().authenticated()
+				.anyRequest().permitAll()
 		).sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		return http.build();
-	}
-
-	@Bean //HABILITANDO ACESSAR O H2-DATABSE NA WEB
-	public ServletRegistrationBean h2servletRegistration(){
-		ServletRegistrationBean registrationBean = new ServletRegistrationBean(new WebServlet());
-		registrationBean.addUrlMappings("/h2-console/*");
-		return registrationBean;
 	}
 }

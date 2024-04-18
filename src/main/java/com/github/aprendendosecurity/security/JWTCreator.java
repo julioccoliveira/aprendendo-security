@@ -1,10 +1,6 @@
 package com.github.aprendendosecurity.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.util.List;
@@ -18,6 +14,9 @@ public class JWTCreator {
 		SecretKeySpec key = new SecretKeySpec(stringKey.getBytes(), "HmacSHA512");
 		String token = Jwts.builder().subject(jwtObject.getSubject()).issuedAt(jwtObject.getIssuedAt()).expiration(jwtObject.getExpiration())
 				.claim(ROLES_AUTHORITIES, checkRoles(jwtObject.getRoles())).signWith(key).compact();
+
+//		String token = Jwts.builder().setSubject(jwtObject.getSubject()).setIssuedAt(jwtObject.getIssuedAt()).setExpiration(jwtObject.getExpiration())
+//				.claim(ROLES_AUTHORITIES, checkRoles(jwtObject.getRoles())).signWith(SignatureAlgorithm.HS512, key).compact();
 		return prefix + " " + token;
 	}
 	public static JWTObject create(String token, String prefix, String stringKey)
@@ -26,8 +25,7 @@ public class JWTCreator {
 		JWTObject object = new JWTObject();
 
 		token = token.replace(prefix, "");
-		//TODO FIX THIS LINE
-//		Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+
 		Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
 
 		object.setSubject(claims.getSubject());
